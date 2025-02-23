@@ -21,16 +21,35 @@
     如果提示没有需要的版本，请尝试不适用国内源  
 3. 修改配置和路线文件 （见 [这里](https://github.com/iOSRealRun/iOSRealRun-cli/blob/main/README.md#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95) 的 4、5、7 步）
 4. 将设备连接到电脑，解锁，如果请求信任的提示框，请点击信任
-5. Windows **以管理员身份** 打开终端（cmd 或 PowerShell），先进入项目目录，然后执行以下命令  
-    ```shell
+5. Windows **以管理员身份** 打开终端（cmd 或 PowerShell），先进入项目目录，然后执行以下命令:
+
+    使用配置文件中的默认值:
+    ```bash
     python main.py
     ```
-    MacOS 打开终端，先进入项目目录，然后执行以下命令  
-    ```shell
-    sudo python3 main.py
-    ```
-    > 需要 管理员 或 root 权限是因为需要创建 tun 设备  
 
-6. 按照提示操作，如果一直说没有设备连接，Windows请确保 iTunes 已安装（可能需要打开），重新运行程序，在第3步时请确保设备已连接，解锁并信任
-7. 结束请务必使用 `Ctrl + C` 终止程序，否则无法恢复定位
-8. 如果定位未恢复，可以重启手机解决
+    指定路径文件:
+    ```bash
+    python main.py -r route.txt
+    ```
+
+    指定速度:
+    ```bash
+    python main.py -v 4.5
+    ```
+
+    同时指定路径和速度:
+    ```bash
+    python main.py -r route.txt -v 4.5
+    ```
+
+    你还可以使用 -h 或 --help 查看帮助信息:
+    ```bash
+    python main.py --help
+    ```
+    
+    > 需要 管理员 或 root 权限是因为需要创建 tun 设备
+    
+7. 按照提示操作，如果一直说没有设备连接，Windows请确保 iTunes 已安装（可能需要打开），重新运行程序，在第3步时请确保设备已连接，解锁并信任
+8. 结束请务必使用 `Ctrl + C` 终止程序，否则无法恢复定位
+9. 如果定位未恢复，可以重启手机解决
