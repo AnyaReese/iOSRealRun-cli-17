@@ -2,6 +2,7 @@ import signal
 import logging
 import coloredlogs
 import os
+import argparse
 
 from driver import location
 
@@ -16,6 +17,16 @@ import run
 
 import config
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='iOS 跑步模拟器')
+    parser.add_argument('-r', '--route', 
+                      help='路径文件位置 (默认: config.yaml 中的 routeConfig)',
+                      default=None)
+    parser.add_argument('-v', '--velocity',
+                      help='跑步速度 (米/秒) (默认: config.yaml 中的 v)',
+                      type=float,
+                      default=None)
+    return parser.parse_args()
 
 debug = os.environ.get("DEBUG", False)
 
@@ -32,9 +43,16 @@ logging.getLogger('humanfriendly.prompts').setLevel(logging.DEBUG if debug else 
 logging.getLogger('blib2to3.pgen2.driver').setLevel(logging.DEBUG if debug else logging.WARNING)
 logging.getLogger('urllib3.connectionpool').setLevel(logging.DEBUG if debug else logging.WARNING)
 
-
-
 def main():
+    args = parse_args()
+    
+    # if route is specified, override the config
+    if args.route:
+        config.config.routeConfig = args.route
+    # if velocity is specified, override the config
+    if args.velocity:
+        config.config.v = args.velocity
+
     # set level
     logger = logging.getLogger(__name__)
     coloredlogs.install(level=logging.INFO)
@@ -59,7 +77,6 @@ def main():
         loc = route.get_route()
         logger.info(f"got route from {config.config.routeConfig}")
 
-
         with RemoteServiceDiscoveryService((address, port)) as rsd:
             with DvtSecureSocketProxyService(rsd) as dvt:
                 try:
@@ -76,7 +93,6 @@ def main():
                     location.clear_location(dvt)
                     logger.info("Location cleared")
 
-
     except KeyboardInterrupt:
         logger.debug("get KeyboardInterrupt (outer)")
     finally:
@@ -86,8 +102,6 @@ def main():
         process.terminate()
         logger.info("tunnel process terminated")
         print("Bye")
-    
 
-    
 if __name__ == "__main__":
     main()
